@@ -1,0 +1,170 @@
+{
+  "info": {
+    "name": "CivicAlert — Complaint Management API",
+    "_postman_id": "civic-alert-collection-2025",
+    "description": "Complete API collection for AI-Based Smart Complaint Management System (AI308B Exam).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "BASE_URL", "value": "http://localhost:5000", "type": "string" },
+    { "key": "TOKEN",    "value": "",                       "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "url": "{{BASE_URL}}/api/health",
+        "description": "Check if the server is running."
+      }
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Signup",
+          "request": {
+            "method": "POST",
+            "url": "{{BASE_URL}}/api/auth/signup",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Rahul Kumar\",\n  \"email\": \"rahul@gmail.com\",\n  \"password\": \"password123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.token) pm.collectionVariables.set('TOKEN', json.token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": "{{BASE_URL}}/api/auth/login",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"rahul@gmail.com\",\n  \"password\": \"password123\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Complaints",
+      "item": [
+        {
+          "name": "Add Complaint",
+          "request": {
+            "method": "POST",
+            "url": "{{BASE_URL}}/api/complaints",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Rahul Kumar\",\n  \"email\": \"rahul@gmail.com\",\n  \"title\": \"Water Leakage Issue\",\n  \"description\": \"Water pipeline damaged near market area causing flooding on the main street.\",\n  \"category\": \"Water Supply\",\n  \"location\": \"Ghaziabad\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get All Complaints (Admin)",
+          "request": {
+            "method": "GET",
+            "url": "{{BASE_URL}}/api/complaints",
+            "header": [{ "key": "Authorization", "value": "Bearer {{TOKEN}}" }]
+          }
+        },
+        {
+          "name": "Get Complaint by ID",
+          "request": {
+            "method": "GET",
+            "url": "{{BASE_URL}}/api/complaints/COMPLAINT_ID_HERE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{TOKEN}}" }]
+          }
+        },
+        {
+          "name": "Update Complaint Status",
+          "request": {
+            "method": "PUT",
+            "url": "{{BASE_URL}}/api/complaints/COMPLAINT_ID_HERE",
+            "header": [
+              { "key": "Content-Type",  "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{TOKEN}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"In Progress\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Search by Location",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{BASE_URL}}/api/complaints/search?location=Ghaziabad",
+              "query": [{ "key": "location", "value": "Ghaziabad" }]
+            },
+            "header": [{ "key": "Authorization", "value": "Bearer {{TOKEN}}" }]
+          }
+        },
+        {
+          "name": "Delete Complaint (Admin)",
+          "request": {
+            "method": "DELETE",
+            "url": "{{BASE_URL}}/api/complaints/COMPLAINT_ID_HERE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{TOKEN}}" }]
+          }
+        }
+      ]
+    },
+    {
+      "name": "AI Analysis",
+      "item": [
+        {
+          "name": "Analyze Complaint",
+          "request": {
+            "method": "POST",
+            "url": "{{BASE_URL}}/api/ai/analyze",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"Water pipeline severely damaged near main market in Ghaziabad. Water is flooding the street and causing major disruption.\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Analyze — Electricity Issue",
+          "request": {
+            "method": "POST",
+            "url": "{{BASE_URL}}/api/ai/analyze",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"There has been no electricity for over 12 hours in Sector 5. Multiple transformers are down. Hospitals are affected. This is an emergency.\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Analyze — Garbage Complaint",
+          "request": {
+            "method": "POST",
+            "url": "{{BASE_URL}}/api/ai/analyze",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"Garbage has not been collected for 3 days in our locality. The dumping area is overflowing causing hygiene issues.\"\n}"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
