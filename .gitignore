@@ -1,0 +1,4 @@
+backend/.env
+frontend/.env
+something.txt
+backend/node_modules/
